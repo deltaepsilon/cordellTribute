@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd "$( dirname "$0" )"
-for f in ../js/*coffee
+for f in ../css/*.less
 do
   echo "Processing $f file..."
-  coffee -c $f
+  lessc $f > $f.css
 done
