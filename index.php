@@ -6,8 +6,9 @@ $app = new Silex\Application();
 $app['debug'] = true;
 
 $app->get('/', function() use($app) {
-    return 'face.html';
+    return include 'face.html';
 });
+
 
 // $app->get('/hello/{name}', function($name) use($app) { 
     // return 'Hello '.$app->escape($name); 

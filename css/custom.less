@@ -1,5 +1,38 @@
-@faceWidth: 640px;
+@faceWidth: 1024px;
+@faceHeight: 768px;
+@elementHeight: 100px;
+@orange: hsla(29, 86%, 50%, 1);
+@festal: hsla(333, 99%, 67%, 1);
+@sherbet: hsla(311, 48%, 50%, 1);
 
 body {
+	background: @orange;
+}
+#face {
 	width: @faceWidth;
+	height: @faceHeight;
+	position: absolute;
+	left: 50%;
+    top: 50%;
+    margin-left: -.5 * @faceWidth;
+    margin-top: -.5 * @faceHeight;
+    background: @festal;
+}
+#modal, #draw, #elements {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+#draw {
+	z-index: 1000;
+}
+#elements {
+	z-index: 2000;
+	background: @sherbet;
+	top: @faceHeight - @elementHeight;
+}
+#modal {
+	z-index: 3000;
 }
