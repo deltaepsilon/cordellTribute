@@ -1,5 +1,5 @@
 (function() {
-  window['face'] = {
+  window.face = {
     drawing: false,
     size: "small",
     color: "hsla(0, 0%, 100%, .9)",
@@ -40,23 +40,6 @@
         return ctx.fill();
       });
     },
-    elements: function() {
-      var elements, pickers;
-      try {
-        elements = $('#elements');
-        return $.each(window.face.colors, function(name, value) {
-          console.log(value);
-          return elements.prepend('<span id="' + name + '" class="color-picker" style="background: ' + value + ';"></span>');
-        });
-      } finally {
-        pickers = $('.color-picker');
-        pickers.click(function() {
-          var color;
-          color = $(this).css('background-color');
-          return window.face.color = color;
-        });
-      }
-    },
     parameters: function(callback) {
       var canvas, face, position;
       try {
@@ -74,15 +57,61 @@
           callback();
         }
       }
+    },
+    incrementColors: function(sign) {
+      return $.each(window.face.colors, function(name, value) {
+        var incremented, newHsl, number, re, text;
+        re = /0*\.*0*\d*\)/;
+        text = re.exec(value);
+        number = parseFloat(text[0]);
+        console.log(number);
+        incremented = sign * .05 + number;
+        incremented = Math.min(incremented, 1);
+        incremented = Math.max(incremented, .05);
+        newHsl = value.replace(re, incremented + ")");
+        console.log(incremented);
+        console.log(newHsl);
+        window.face.colors[name] = newHsl;
+        return $('#' + name).css('background-color', newHsl);
+      });
+    },
+    elements: function(callback) {
+      var elements, pickers;
+      try {
+        elements = $('#elements');
+        $.each(window.face.colors, function(name, value) {
+          console.log(value);
+          return elements.prepend('<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>');
+        });
+        pickers = $('.color-picker');
+        pickers.click(function() {
+          var color;
+          color = $(this).css('background-color');
+          return window.face.color = color;
+        });
+        $('#darker').click(function() {
+          return window.face.incrementColors(1);
+        });
+        return $('#lighter').click(function() {
+          return window.face.incrementColors(-1);
+        });
+      } finally {
+        elements.children().fadeIn("slow");
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
     }
   };
   $(document).ready(function() {
-    return window.face.parameters(function() {
-      window.face.elements();
-      return window.face.draw();
+    console.log("inside ready");
+    window.face.parameters(function() {
+      return window.face.elements(function() {
+        return window.face.draw();
+      });
     });
-  });
-  $(window).resize(function() {
-    return window.face.parameters();
+    return $(window).resize(function() {
+      return window.face.parameters();
+    });
   });
 }).call(this);

@@ -1,4 +1,4 @@
-window['face'] =
+window.face =
   drawing: false
   size: "small"
   color: "hsla(0, 0%, 100%, .9)"
@@ -31,18 +31,6 @@ window['face'] =
       ctx.fillStyle = window.face.color
       ctx.arc x, y, window.face.diameter, 0, Math.PI * 2, true
       ctx.fill()
-  elements: ->
-    try
-      elements = $('#elements')
-      $.each window.face.colors, (name, value) ->
-        console.log value
-        elements.prepend '<span id="' + name + '" class="color-picker" style="background: ' + value + ';"></span>'
-    finally
-      pickers = $('.color-picker')
-      pickers.click ->
-        color = $(this).css 'background-color'
-        window.face.color = color
-      
   parameters: (callback) ->
     try
       canvas = $('#draw')
@@ -56,10 +44,43 @@ window['face'] =
       window.face.offset['top'] = position.top + parseInt face.css('margin-top')
     finally
       if typeof(callback) == 'function'
-        callback() 
+        callback()
+  incrementColors: (sign) ->
+    $.each window.face.colors, (name, value) ->
+      re = /0*\.*0*\d*\)/
+      text = re.exec(value)
+      number = parseFloat text[0]
+      console.log number
+      incremented = sign * .05 + number
+      incremented = Math.min incremented, 1
+      incremented = Math.max incremented, .05
+      newHsl = value.replace re, incremented + ")"
+      console.log incremented
+      console.log newHsl
+      window.face.colors[name] = newHsl
+      $('#' + name).css 'background-color', newHsl
+  elements: (callback) ->
+    try
+      elements = $('#elements')
+      $.each window.face.colors, (name, value) ->
+        console.log value
+        elements.prepend '<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>'
+      pickers = $('.color-picker')
+      pickers.click ->
+        color = $(this).css 'background-color'
+        window.face.color = color
+      $('#darker').click ->
+        window.face.incrementColors 1
+      $('#lighter').click ->
+        window.face.incrementColors -1
+    finally
+      elements.children().fadeIn "slow"
+      if typeof(callback) == 'function'
+        callback()
 $(document).ready ->
+  console.log "inside ready"
   window.face.parameters ->
-	  window.face.elements()
-	  window.face.draw()
-	$(window).resize ->
-	  window.face.parameters()
+    window.face.elements ->
+      window.face.draw()
+  $(window).resize ->
+    window.face.parameters()
