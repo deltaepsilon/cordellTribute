@@ -1,10 +1,9 @@
 @faceWidth: 1024px;
 @faceHeight: 768px;
 @elementHeight: 100px;
-@drawSmall: 8px;
-@drawSmallRadius: 4px;
-@mediumFactor: 2;
-@largeFactor: 4;
+@colorPickerHeight: ( @elementHeight * .5 );
+@darker: hsla(0, 0%, 100%, 1);
+@lighter: hsla(0, 0%, 100%, .5);
 @orange: hsla(29, 86%, 50%, 1);
 @festal: hsla(333, 99%, 67%, 1);
 @sherbet: hsla(311, 48%, 50%, 1);
@@ -33,6 +32,8 @@ body {
 }
 #draw {
 	z-index: 1000;
+	width: @faceWidth;
+	height: @faceHeight - @elementHeight;
 }
 #elements {
 	z-index: 2000;
@@ -42,30 +43,31 @@ body {
 #modal {
 	z-index: 3000;
 }
-span.small, span.medium, span.large {
-	position: absolute;
+.color-picker {
+	float: left;
+	width: @colorPickerHeight;
+	height: @colorPickerHeight;
+	position: relative;
+	top: 50%;
+	margin-top: .5 * @colorPickerHeight;
+	margin-left: .25 * @colorPickerHeight;
+	
 }
-span.small {
-	height: @drawSmall;
-	width: @drawSmall;
-	-webkit-border-radius: @drawSmallRadius;
-	-moz-border-radius: @drawSmallRadius;
-	border-radius: @drawSmallRadius;
+#alpha-selector {
+	height: @elementHeight .5;
+	width: @elementHeight * .25;
+	float: left;
 }
-span.medium {
-	height: @mediumFactor * @drawSmall;
-	width: @mediumFactor * @drawSmall;
-	-webkit-border-radius: @mediumFactor * @drawSmallRadius;
-	-moz-border-radius: @mediumFactor * @drawSmallRadius;
-	border-radius: @mediumFactor * @drawSmallRadius;
+#darker, #lighter{
+	height: @elementHeight * .25;
+	width: @elementHeight * .25;
+	position: relative;
+	top: @elementHeight * .25;
+	margin-left: .25 * @colorPickerHeight;
+	float: left;
+	background: @darker;
+	border-radius: 400px 400px 400px 400px;
 }
-span.large {
-	height: @largeFactor * @drawSmall;
-	width: @largeFactor * @drawSmall;
-	-webkit-border-radius: @largeFactor * @drawSmallRadius;
-	-moz-border-radius: @largeFactor * @drawSmallRadius;
-	border-radius: @largeFactor * @drawSmallRadius;
-}
-span.lime {
-	background: @lime;
+#lighter {
+	background: @lighter;
 }
