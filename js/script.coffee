@@ -1,43 +1,32 @@
 window['face'] =
   drawing: false
+  size: "small"
+  color: "lime"
+  offset: {}
   draw: ->
-    drawing = false
-    console.log "inside draw"
-    $('#draw').mousedown ->
+    draw = $('#draw')
+    draw.mousedown ->
       window.face.drawing = true
-      console.log "mousedown!"
-    $('#draw').mouseup ->
+    draw.mouseup ->
       window.face.drawing = false
-      console.log "mouseup!"
-    $('#draw').mouseleave ->
+    draw.mouseleave ->
       window.face.drawing = false
-      console.log "mouseleave!"
-    $('#draw').mousemove ->
+    draw.mousemove (e) ->
       if window.face.drawing == false
         return
-      console.log this
+      span = '<span class="' + window.face.size + ' ' + window.face.color + '" style="top: ' + ( e.clientY  -  window.face.offset.top ) + 'px; left: ' + ( e.clientX  -  window.face.offset.left ) + 'px;"></span>'
+      draw.append span
+  parameters: (callback) ->
+    try
+      face = $('#face')
+      position = face.position()
+      window.face.offset['left'] = position.left + parseInt face.css('margin-left')
+      window.face.offset['top'] = position.top + parseInt face.css('margin-top')
+    finally
+      if typeof(callback) == 'function'
+        callback() 
 $(document).ready ->
-	window.face.draw()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  window.face.parameters ->
+	  window.face.draw()
+	$(window).resize ->
+	  window.face.parameters()

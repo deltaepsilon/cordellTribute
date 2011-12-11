@@ -1,9 +1,12 @@
 @faceWidth: 1024px;
 @faceHeight: 768px;
 @elementHeight: 100px;
+@drawSmall: 8px;
 @orange: hsla(29, 86%, 50%, 1);
 @festal: hsla(333, 99%, 67%, 1);
 @sherbet: hsla(311, 48%, 50%, 1);
+@lime: hsla(92, 82%, 50%, 1);
+
 
 body {
 	background: @orange;
@@ -35,4 +38,22 @@ body {
 }
 #modal {
 	z-index: 3000;
+}
+span.small, span.medium, span.large {
+	position: absolute;
+}
+span.small {
+	height: @drawSmall;
+	width: @drawSmall;
+}
+span.medium {
+	height: 2 * @drawSmall;
+	width: 2 * @drawSmall;
+}
+span.large {
+	height: 4 * @drawSmall;
+	width: 4 * @drawSmall;
+}
+span.lime {
+	background: @lime;
 }
