@@ -12,6 +12,8 @@ window.face =
     tangerine: "hsla(25, 98%, 51%, .9)"
   diameter: 10
   offset: {}
+  timer: 0
+  repeat: 100
   draw: ->
     draw = $('#draw')
     ctx = window.face.ctx
@@ -36,8 +38,6 @@ window.face =
       canvas = $('#draw')
       window.face['canvas'] = document.getElementById 'draw'
       window.face['ctx'] = window.face.canvas.getContext '2d'
-      canvas.attr 'width', canvas.width()
-      canvas.attr 'height', canvas.height()
       face = $('#face')
       position = face.position()
       window.face.offset['left'] = position.left + parseInt face.css('margin-left')
@@ -45,40 +45,89 @@ window.face =
     finally
       if typeof(callback) == 'function'
         callback()
-  incrementColors: (sign) ->
-    $.each window.face.colors, (name, value) ->
-      re = /0*\.*0*\d*\)/
-      text = re.exec(value)
-      number = parseFloat text[0]
-      console.log number
-      incremented = sign * .05 + number
-      incremented = Math.min incremented, 1
-      incremented = Math.max incremented, .05
-      newHsl = value.replace re, incremented + ")"
-      console.log incremented
-      console.log newHsl
-      window.face.colors[name] = newHsl
-      $('#' + name).css 'background-color', newHsl
+  incrementColors: (sign, callback) ->
+    try
+      $.each window.face.colors, (name, value) ->
+        re = /0*\.*0*\d*\)/
+        text = re.exec(value)
+        number = parseFloat text[0]
+        incremented = sign * .05 + number
+        incremented = Math.min incremented, 1
+        incremented = Math.max incremented, .05
+        newHsl = value.replace re, incremented + ")"
+        window.face.colors[name] = newHsl
+        $('#' + name).css 'background-color', newHsl
+    finally
+      if typeof(callback) == 'function'
+        callback()
+  selectionDisplay: ->
+    stroke = $('#selection-display')
+    diameter = 2 * window.face.diameter
+    stroke.css('background-color', window.face.color).width(diameter).height(diameter)
+  erase: ->
+    draw = $('#draw')
+    window.face.ctx.clearRect 0, 0, draw.width(), draw.height() 
   elements: (callback) ->
     try
       elements = $('#elements')
       $.each window.face.colors, (name, value) ->
-        console.log value
         elements.prepend '<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>'
       pickers = $('.color-picker')
       pickers.click ->
         color = $(this).css 'background-color'
         window.face.color = color
-      $('#darker').click ->
-        window.face.incrementColors 1
-      $('#lighter').click ->
-        window.face.incrementColors -1
+        window.face.selectionDisplay()
+      
+      # Enable darker, lighter, thicker and thinner buttons including
+      # mousedown repetition.  Clicking over and over again is annoying
+      
+      # Darker
+      $('#darker').mousedown ->
+        wrapper = ->
+          window.face.incrementColors 1
+        window.face.timer = setInterval wrapper, window.face.repeat
+      .bind 'mouseup mouseleave', ->
+        clearInterval window.face.timer
+      
+      # Lighter
+      $('#lighter').mousedown ->
+        wrapper = ->
+          window.face.incrementColors -1
+        window.face.timer = setInterval wrapper, window.face.repeat
+      .bind 'mouseup mouseleave', ->
+        clearInterval window.face.timer
+      
+      # Thicker
+      $('#thicker').mousedown ->
+        wrapper = ->
+          if window.face.diameter >= pickers.height() / 2
+            return
+          window.face.diameter += 1
+          window.face.selectionDisplay()
+        window.face.timer = setInterval wrapper, window.face.repeat
+      .bind 'mouseup mouseleave', ->
+        clearInterval window.face.timer
+      
+      # Thinner
+      $('#thinner').mousedown ->
+        wrapper = ->
+          if window.face.diameter <= 2
+            return
+          window.face.diameter -= 1
+          window.face.selectionDisplay()
+        window.face.timer = setInterval wrapper, window.face.repeat
+      .bind 'mouseup mouseleave', ->
+        clearInterval window.face.timer
+      
+      # Erase
+      $('#erase').click ->
+        window.face.erase()
     finally
+      window.face.selectionDisplay()
       elements.children().fadeIn "slow"
       if typeof(callback) == 'function'
         callback()
 $(document).ready ->
-  console.log "inside ready"
   window.face.parameters ->
     window.face.elements ->
       window.face.draw()

@@ -14,6 +14,8 @@
     },
     diameter: 10,
     offset: {},
+    timer: 0,
+    repeat: 100,
     draw: function() {
       var ctx, draw;
       draw = $('#draw');
@@ -46,8 +48,6 @@
         canvas = $('#draw');
         window.face['canvas'] = document.getElementById('draw');
         window.face['ctx'] = window.face.canvas.getContext('2d');
-        canvas.attr('width', canvas.width());
-        canvas.attr('height', canvas.height());
         face = $('#face');
         position = face.position();
         window.face.offset['left'] = position.left + parseInt(face.css('margin-left'));
@@ -58,44 +58,100 @@
         }
       }
     },
-    incrementColors: function(sign) {
-      return $.each(window.face.colors, function(name, value) {
-        var incremented, newHsl, number, re, text;
-        re = /0*\.*0*\d*\)/;
-        text = re.exec(value);
-        number = parseFloat(text[0]);
-        console.log(number);
-        incremented = sign * .05 + number;
-        incremented = Math.min(incremented, 1);
-        incremented = Math.max(incremented, .05);
-        newHsl = value.replace(re, incremented + ")");
-        console.log(incremented);
-        console.log(newHsl);
-        window.face.colors[name] = newHsl;
-        return $('#' + name).css('background-color', newHsl);
-      });
+    incrementColors: function(sign, callback) {
+      try {
+        return $.each(window.face.colors, function(name, value) {
+          var incremented, newHsl, number, re, text;
+          re = /0*\.*0*\d*\)/;
+          text = re.exec(value);
+          number = parseFloat(text[0]);
+          incremented = sign * .05 + number;
+          incremented = Math.min(incremented, 1);
+          incremented = Math.max(incremented, .05);
+          newHsl = value.replace(re, incremented + ")");
+          window.face.colors[name] = newHsl;
+          return $('#' + name).css('background-color', newHsl);
+        });
+      } finally {
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    },
+    selectionDisplay: function() {
+      var diameter, stroke;
+      stroke = $('#selection-display');
+      diameter = 2 * window.face.diameter;
+      return stroke.css('background-color', window.face.color).width(diameter).height(diameter);
+    },
+    erase: function() {
+      var draw;
+      draw = $('#draw');
+      return window.face.ctx.clearRect(0, 0, draw.width(), draw.height());
     },
     elements: function(callback) {
       var elements, pickers;
       try {
         elements = $('#elements');
         $.each(window.face.colors, function(name, value) {
-          console.log(value);
           return elements.prepend('<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>');
         });
         pickers = $('.color-picker');
         pickers.click(function() {
           var color;
           color = $(this).css('background-color');
-          return window.face.color = color;
+          window.face.color = color;
+          return window.face.selectionDisplay();
         });
-        $('#darker').click(function() {
-          return window.face.incrementColors(1);
+        $('#darker').mousedown(function() {
+          var wrapper;
+          wrapper = function() {
+            return window.face.incrementColors(1);
+          };
+          return window.face.timer = setInterval(wrapper, window.face.repeat);
+        }).bind('mouseup mouseleave', function() {
+          return clearInterval(window.face.timer);
         });
-        return $('#lighter').click(function() {
-          return window.face.incrementColors(-1);
+        $('#lighter').mousedown(function() {
+          var wrapper;
+          wrapper = function() {
+            return window.face.incrementColors(-1);
+          };
+          return window.face.timer = setInterval(wrapper, window.face.repeat);
+        }).bind('mouseup mouseleave', function() {
+          return clearInterval(window.face.timer);
+        });
+        $('#thicker').mousedown(function() {
+          var wrapper;
+          wrapper = function() {
+            if (window.face.diameter >= pickers.height() / 2) {
+              return;
+            }
+            window.face.diameter += 1;
+            return window.face.selectionDisplay();
+          };
+          return window.face.timer = setInterval(wrapper, window.face.repeat);
+        }).bind('mouseup mouseleave', function() {
+          return clearInterval(window.face.timer);
+        });
+        $('#thinner').mousedown(function() {
+          var wrapper;
+          wrapper = function() {
+            if (window.face.diameter <= 2) {
+              return;
+            }
+            window.face.diameter -= 1;
+            return window.face.selectionDisplay();
+          };
+          return window.face.timer = setInterval(wrapper, window.face.repeat);
+        }).bind('mouseup mouseleave', function() {
+          return clearInterval(window.face.timer);
+        });
+        return $('#erase').click(function() {
+          return window.face.erase();
         });
       } finally {
+        window.face.selectionDisplay();
         elements.children().fadeIn("slow");
         if (typeof callback === 'function') {
           callback();
@@ -104,7 +160,6 @@
     }
   };
   $(document).ready(function() {
-    console.log("inside ready");
     window.face.parameters(function() {
       return window.face.elements(function() {
         return window.face.draw();
