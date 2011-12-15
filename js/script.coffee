@@ -14,25 +14,6 @@ window.face =
   offset: {}
   timer: 0
   repeat: 100
-  draw: ->
-    draw = $('#draw')
-    ctx = window.face.ctx
-    # ctx.scale -2, -2
-    draw.mousedown ->
-      window.face.drawing = true
-    draw.mouseup ->
-      window.face.drawing = false
-    draw.mouseleave ->
-      window.face.drawing = false
-    draw.mousemove (e) ->
-      if window.face.drawing == false
-        return
-      x = e.clientX  -  window.face.offset.left
-      y = e.clientY  -  window.face.offset.top
-      ctx.beginPath()
-      ctx.fillStyle = window.face.color
-      ctx.arc x, y, window.face.diameter, 0, Math.PI * 2, true
-      ctx.fill()
   parameters: (callback) ->
     try
       canvas = $('#draw')
@@ -127,7 +108,58 @@ window.face =
       elements.children().fadeIn "slow"
       if typeof(callback) == 'function'
         callback()
+  placeAudio: (audio, callback) ->
+    try
+      section = $('#audio')
+      $.each audio, (key, value) ->
+        section.append '<audio id="audio-' + key + '" class="audio-clip"><source src="audio/' + value + '.ogg" type="audio/ogg"><source src="audio/' + value + '.mp3" type="audio/mp3"></audio>'
+    finally
+      window.face['audioElements'] = document.getElementsByTagName('audio')
+      if typeof(callback) == 'function'
+        callback()
+  playAudio: ->
+    elements = window.face.audioElements
+    element = elements[Object.randomFromTo(0, elements.length - 1)]
+    element.play()
+  draw: ->
+    timer = 0
+    draw = $('#draw')
+    ctx = window.face.ctx
+    draw.mousedown ->
+      clearTimeout timer
+      timer = setTimeout window.face.playAudio, 2000
+      window.face.drawing = true
+    draw.mouseup ->
+      window.face.drawing = false
+    draw.mouseleave ->
+      window.face.drawing = false
+    draw.mousemove (e) ->
+      if window.face.drawing == false
+        return
+      x = e.clientX  -  window.face.offset.left
+      y = e.clientY  -  window.face.offset.top
+      ctx.beginPath()
+      ctx.fillStyle = window.face.color
+      ctx.arc x, y, window.face.diameter, 0, Math.PI * 2, true
+      ctx.fill()
+Object.size = (obj) ->
+  # Sometimes you need to know how long an object is
+  size = 0
+  $.each obj, (key, value) ->
+    size += 1
+  return size;
+Object.randomize = (obj) ->
+  # Sometimes you want to randomize an object just like you would an array
+  result = obj.sort (a, b)->
+      0.5 - Math.random()
+  return result
+Object.randomFromTo = (from, to) ->
+  Math.floor Math.random() * (to - from + 1) + from
 $(document).ready ->
+  $.post '/', (audio) ->
+    window.face['audio'] = $.parseJSON audio
+    console.log window.face.audio
+    window.face.placeAudio window.face.audio
   window.face.parameters ->
     window.face.elements ->
       window.face.draw()

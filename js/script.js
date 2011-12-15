@@ -16,32 +16,6 @@
     offset: {},
     timer: 0,
     repeat: 100,
-    draw: function() {
-      var ctx, draw;
-      draw = $('#draw');
-      ctx = window.face.ctx;
-      draw.mousedown(function() {
-        return window.face.drawing = true;
-      });
-      draw.mouseup(function() {
-        return window.face.drawing = false;
-      });
-      draw.mouseleave(function() {
-        return window.face.drawing = false;
-      });
-      return draw.mousemove(function(e) {
-        var x, y;
-        if (window.face.drawing === false) {
-          return;
-        }
-        x = e.clientX - window.face.offset.left;
-        y = e.clientY - window.face.offset.top;
-        ctx.beginPath();
-        ctx.fillStyle = window.face.color;
-        ctx.arc(x, y, window.face.diameter, 0, Math.PI * 2, true);
-        return ctx.fill();
-      });
-    },
     parameters: function(callback) {
       var canvas, face, position;
       try {
@@ -157,9 +131,81 @@
           callback();
         }
       }
+    },
+    placeAudio: function(audio, callback) {
+      var section;
+      try {
+        section = $('#audio');
+        return $.each(audio, function(key, value) {
+          return section.append('<audio id="audio-' + key + '" class="audio-clip"><source src="audio/' + value + '.ogg" type="audio/ogg"><source src="audio/' + value + '.mp3" type="audio/mp3"></audio>');
+        });
+      } finally {
+        window.face['audioElements'] = document.getElementsByTagName('audio');
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    },
+    playAudio: function() {
+      var element, elements;
+      elements = window.face.audioElements;
+      element = elements[Object.randomFromTo(0, elements.length - 1)];
+      return element.play();
+    },
+    draw: function() {
+      var ctx, draw, timer;
+      timer = 0;
+      draw = $('#draw');
+      ctx = window.face.ctx;
+      draw.mousedown(function() {
+        clearTimeout(timer);
+        timer = setTimeout(window.face.playAudio, 2000);
+        return window.face.drawing = true;
+      });
+      draw.mouseup(function() {
+        return window.face.drawing = false;
+      });
+      draw.mouseleave(function() {
+        return window.face.drawing = false;
+      });
+      return draw.mousemove(function(e) {
+        var x, y;
+        if (window.face.drawing === false) {
+          return;
+        }
+        x = e.clientX - window.face.offset.left;
+        y = e.clientY - window.face.offset.top;
+        ctx.beginPath();
+        ctx.fillStyle = window.face.color;
+        ctx.arc(x, y, window.face.diameter, 0, Math.PI * 2, true);
+        return ctx.fill();
+      });
     }
   };
+  Object.size = function(obj) {
+    var size;
+    size = 0;
+    $.each(obj, function(key, value) {
+      return size += 1;
+    });
+    return size;
+  };
+  Object.randomize = function(obj) {
+    var result;
+    result = obj.sort(function(a, b) {
+      return 0.5 - Math.random();
+    });
+    return result;
+  };
+  Object.randomFromTo = function(from, to) {
+    return Math.floor(Math.random() * (to - from + 1) + from);
+  };
   $(document).ready(function() {
+    $.post('/', function(audio) {
+      window.face['audio'] = $.parseJSON(audio);
+      console.log(window.face.audio);
+      return window.face.placeAudio(window.face.audio);
+    });
     window.face.parameters(function() {
       return window.face.elements(function() {
         return window.face.draw();
