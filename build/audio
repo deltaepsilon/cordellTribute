@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+cd "$( dirname "$0" )"
+
+rm ../audio/*.ogg
+oggenc ../audio/*.wav
+
+rm ../audio/*.mp3
+for f in ../audio/*.wav
+do
+  lame $f
+done
