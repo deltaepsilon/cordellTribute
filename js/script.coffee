@@ -56,6 +56,7 @@ window.face =
     window.face.ctx.clearRect 0, 0, draw.width(), draw.height() 
   elements: (callback) ->
     try
+      console.log "Called elements"
       elements = $('#elements')
       $.each window.face.colors, (name, value) ->
         elements.prepend '<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>'
@@ -69,7 +70,7 @@ window.face =
       # mousedown repetition.  Clicking over and over again is annoying
       
       # Darker
-      $('#darker').mousedown ->
+      $('#darker').bind 'mousedown touchstart', ->
         wrapper = ->
           window.face.incrementColors 1
         window.face.timer = setInterval wrapper, window.face.repeat
@@ -77,7 +78,7 @@ window.face =
         clearInterval window.face.timer
       
       # Lighter
-      $('#lighter').mousedown ->
+      $('#lighter').bind 'mousedown touchstart', ->
         wrapper = ->
           window.face.incrementColors -1
         window.face.timer = setInterval wrapper, window.face.repeat
@@ -85,7 +86,7 @@ window.face =
         clearInterval window.face.timer
       
       # Thicker
-      $('#thicker').mousedown ->
+      $('#thicker').bind 'mousedown touchstart', ->
         wrapper = ->
           if window.face.diameter >= pickers.height() / 2
             return
@@ -96,7 +97,7 @@ window.face =
         clearInterval window.face.timer
       
       # Thinner
-      $('#thinner').mousedown ->
+      $('#thinner').bind 'mousedown touchstart', ->
         wrapper = ->
           if window.face.diameter <= 2
             return
@@ -132,22 +133,22 @@ window.face =
     draw = $('#draw')
     ctx = window.face.ctx
     # draw.mousedown ->
-    draw.bind 'vmousedown mousedown', ->
+    draw.bind 'mousedown touchstart', ->
       clearTimeout timer
       timer = setTimeout window.face.playAudio, 2000
       window.face.drawing = true
     # draw.mouseup ->
-    draw.bind 'vmouseup mouseup', ->
+    draw.bind 'mouseup touchend', ->
       window.face.drawing = false
     # draw.mouseleave ->
-    draw.bind 'vmouseleave mouseleave', ->
+    draw.bind 'mouseleave', ->
       window.face.drawing = false
     # draw.mousemove (e) ->
-    draw.bind 'vmousemove mousemove', (e) ->
+    draw.bind 'mousemove touchmove', (e) ->
       if window.face.drawing == false
         return
-      x = e.clientX  -  window.face.offset.left
-      y = e.clientY  -  window.face.offset.top
+      x = e.pageX  -  window.face.offset.left
+      y = e.pageY  -  window.face.offset.top
       ctx.beginPath()
       ctx.fillStyle = window.face.color
       ctx.arc x, y, window.face.diameter, 0, Math.PI * 2, true
@@ -166,9 +167,10 @@ Object.randomize = (obj) ->
 Object.randomFromTo = (from, to) ->
   Math.floor Math.random() * (to - from + 1) + from
 $(document).ready ->
+  console.log "called document ready"
+  # $.get 'js/libs/jquery.mobile-1.0.min.js', ->
   $.post '/', (audio) ->
     window.face['audio'] = $.parseJSON audio
-    console.log window.face.audio
     window.face.placeAudio window.face.audio
   window.face.parameters ->
     window.face.elements ->

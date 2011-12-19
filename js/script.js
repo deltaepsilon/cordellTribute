@@ -66,6 +66,7 @@
     elements: function(callback) {
       var elements, pickers;
       try {
+        console.log("Called elements");
         elements = $('#elements');
         $.each(window.face.colors, function(name, value) {
           return elements.prepend('<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>');
@@ -77,7 +78,7 @@
           window.face.color = color;
           return window.face.selectionDisplay();
         });
-        $('#darker').mousedown(function() {
+        $('#darker').bind('mousedown touchstart', function() {
           var wrapper;
           wrapper = function() {
             return window.face.incrementColors(1);
@@ -86,7 +87,7 @@
         }).bind('mouseup mouseleave', function() {
           return clearInterval(window.face.timer);
         });
-        $('#lighter').mousedown(function() {
+        $('#lighter').bind('mousedown touchstart', function() {
           var wrapper;
           wrapper = function() {
             return window.face.incrementColors(-1);
@@ -95,7 +96,7 @@
         }).bind('mouseup mouseleave', function() {
           return clearInterval(window.face.timer);
         });
-        $('#thicker').mousedown(function() {
+        $('#thicker').bind('mousedown touchstart', function() {
           var wrapper;
           wrapper = function() {
             if (window.face.diameter >= pickers.height() / 2) {
@@ -108,7 +109,7 @@
         }).bind('mouseup mouseleave', function() {
           return clearInterval(window.face.timer);
         });
-        $('#thinner').mousedown(function() {
+        $('#thinner').bind('mousedown touchstart', function() {
           var wrapper;
           wrapper = function() {
             if (window.face.diameter <= 2) {
@@ -157,24 +158,24 @@
       timer = 0;
       draw = $('#draw');
       ctx = window.face.ctx;
-      draw.bind('vmousedown mousedown', function() {
+      draw.bind('mousedown touchstart', function() {
         clearTimeout(timer);
         timer = setTimeout(window.face.playAudio, 2000);
         return window.face.drawing = true;
       });
-      draw.bind('vmouseup mouseup', function() {
+      draw.bind('mouseup touchend', function() {
         return window.face.drawing = false;
       });
-      draw.bind('vmouseleave mouseleave', function() {
+      draw.bind('mouseleave', function() {
         return window.face.drawing = false;
       });
-      return draw.bind('vmousemove mousemove', function(e) {
+      return draw.bind('mousemove touchmove', function(e) {
         var x, y;
         if (window.face.drawing === false) {
           return;
         }
-        x = e.clientX - window.face.offset.left;
-        y = e.clientY - window.face.offset.top;
+        x = e.pageX - window.face.offset.left;
+        y = e.pageY - window.face.offset.top;
         ctx.beginPath();
         ctx.fillStyle = window.face.color;
         ctx.arc(x, y, window.face.diameter, 0, Math.PI * 2, true);
@@ -201,9 +202,9 @@
     return Math.floor(Math.random() * (to - from + 1) + from);
   };
   $(document).ready(function() {
+    console.log("called document ready");
     $.post('/', function(audio) {
       window.face['audio'] = $.parseJSON(audio);
-      console.log(window.face.audio);
       return window.face.placeAudio(window.face.audio);
     });
     window.face.parameters(function() {
