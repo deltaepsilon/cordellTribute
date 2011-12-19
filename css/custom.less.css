@@ -1,3 +1,117 @@
 body {
-  width: 640px;
+  background: #000000;
+  min-width: 768px;
+  min-height: 1024px;
+  font-family: 'Bowlby One SC', cursive;
+}
+#face {
+  width: 768px;
+  height: 1024px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -384px;
+  margin-top: -512px;
+  border: 1px solid #ffffff;
+  background-color: #666666;
+  background-image: url(/img/face.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#modal, #draw, #elements {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#draw {
+  z-index: 1000;
+  width: 768px;
+  height: 924px;
+  cursor: crosshair;
+  position: absolute;
+}
+#elements {
+  z-index: 2000;
+  top: 924px;
+  background-color: #000000;
+}
+#modal {
+  z-index: 3000;
+}
+.color-picker, #selection-display, #erase {
+  float: left;
+  width: 50px;
+  height: 50px;
+  /*position: relative;
+	top: 50%;*/
+
+  margin-top: 25px;
+  margin-left: 12.5px;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+}
+#alpha-selector, #size-selector {
+  height: 100px 0.5;
+  width: 25px;
+  margin-left: 12.5px;
+  float: left;
+  cursor: pointer;
+}
+#darker,
+#lighter,
+#thicker,
+#thinner {
+  height: 25px;
+  width: 25px;
+  position: relative;
+  top: 25px;
+  /*margin-left: .25 * @colorPickerHeight;*/
+
+  float: left;
+  background: #ffffff;
+  border-radius: 400px 400px 400px 400px;
+}
+#lighter {
+  background: rgba(255, 255, 255, 0.5);
+}
+#thinner {
+  height: 12.5px;
+  width: 12.5px;
+  position: relative;
+  top: 31.25px;
+  left: 6.25px;
+}
+#selection-display {
+  background: #ffffff;
+  border-radius: 400px 400px 400px 400px;
+  border: #ffffff 1px solid;
+}
+#erase {
+  font-size: bold;
+  float: right;
+  position: relative;
+  right: 25px;
+}
+#erase span {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: table;
+}
+#erase span p {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  color: #000000;
+}
+#banner {
+  font-size: 82px;
+  text-align: center;
+  text-shadow: #ffffff 1px 1px, #ffffff 2px 2px, #ffffff 3px 3px, #ffffff 4px 4px, #ffffff 5px 5px, #ffffff 6px 6px, #ffffff 7px 7px, #ffffff 8px 8px;
+  color: #ff0099;
 }

@@ -1,17 +1,27 @@
-@faceWidth: 1024px;
-@faceHeight: 768px;
+@faceWidth: 768px;
+@faceHeight: 1024px;
 @elementHeight: 100px;
+@bannerOffset: 100px;
 @colorPickerHeight: ( @elementHeight * .5 );
 @darker: hsla(0, 0%, 100%, 1);
 @lighter: hsla(0, 0%, 100%, .5);
 @orange: hsla(29, 86%, 50%, 1);
 @festal: hsla(333, 99%, 67%, 1);
 @sherbet: hsla(311, 48%, 50%, 1);
-@lime: hsla(92, 82%, 50%, 1);
+@white: hsla(0, 0%, 100%, 1);
+@black: hsla(0, 0%, 0%, 1);
+@purple: hsla(302, 100%, 42%, 1);
+@yellow: hsla(63, 100%, 50%, 1);
+@lime: hsla(88, 100%, 50%, 1);
+@pink: hsla(324, 100%, 50%, 1);
+@gray: hsla(0, 0%, 13%, 1);
 
 
 body {
-	background: @orange;
+	background: @black;
+	min-width: @faceWidth;
+	min-height: @faceHeight;
+	font-family: 'Bowlby One SC', cursive;
 }
 #face {
 	width: @faceWidth;
@@ -21,7 +31,11 @@ body {
     top: 50%;
     margin-left: -.5 * @faceWidth;
     margin-top: -.5 * @faceHeight;
-    background: @festal;
+    border: 1px solid @darker;
+    background-color: @gray;
+    background-image: url(/img/face.png);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 #modal, #draw, #elements {
 	position: absolute;
@@ -35,11 +49,12 @@ body {
 	width: @faceWidth;
 	height: @faceHeight - @elementHeight;
 	cursor: crosshair;
+    position: absolute;
 }
 #elements {
 	z-index: 2000;
-	background: @sherbet;
 	top: @faceHeight - @elementHeight;
+	background-color: @black;
 }
 #modal {
 	z-index: 3000;
@@ -53,6 +68,8 @@ body {
 	margin-top: .5 * @colorPickerHeight;
 	margin-left: .25 * @colorPickerHeight;
 	cursor: pointer;
+	background-color: @white;
+	border: 1px solid @white;
 }
 #alpha-selector, #size-selector {
 	height: @elementHeight .5;
@@ -84,11 +101,13 @@ body {
 #selection-display {
 	background: @darker;
 	border-radius: 400px 400px 400px 400px;
+	border: @white 1px solid;
 }
 #erase {
-	color: @darker;
 	font-size: bold;
-	position: relative;
+	float: right;
+    position: relative;
+    right: 25px;
 }
 #erase span {
   	position: absolute;
@@ -102,4 +121,11 @@ body {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
+    color: @black;
+}
+#banner {
+	font-size: 82px;
+	text-align: center;
+	text-shadow: #ffffff 1px 1px, #ffffff 2px 2px, #ffffff 3px 3px, #ffffff 4px 4px, #ffffff 5px 5px, #ffffff 6px 6px, #ffffff 7px 7px, #ffffff 8px 8px;
+	color: @pink;
 }

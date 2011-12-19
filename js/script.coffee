@@ -4,12 +4,18 @@ window.face =
   color: "hsla(0, 0%, 100%, .9)"
   colors:
     white: "hsla(0, 0%, 100%, .9)"
-    red: "hsla(0, 66%, 49%, .9)"
-    blue: "hsla(196, 90%, 39%, .9)"
-    purple: "hsla(280, 22%, 40%, .9)"
-    eggplant: "hsla(201, 36%, 25%, .9)"
-    green: "hsla(90, 92%, 31%, .9)"
-    tangerine: "hsla(25, 98%, 51%, .9)"
+    # red: "hsla(0, 66%, 49%, .9)"
+    # blue: "hsla(196, 90%, 39%, .9)"
+    # purple: "hsla(280, 22%, 40%, .9)"
+    # eggplant: "hsla(201, 36%, 25%, .9)"
+    # green: "hsla(90, 92%, 31%, .9)"
+    # tangerine: "hsla(25, 98%, 51%, .9)"
+    black: "hsla(0, 0%, 0%, 1)"
+    purple: "hsla(302, 100%, 42%, 1)"
+    yellow: "hsla(63, 100%, 50%, 1)"
+    lime: "hsla(88, 100%, 50%, 1)"
+    pink: "hsla(324, 100%, 50%, 1)"
+    gray: "hsla(0, 0%, 40%, 1)"
   diameter: 10
   offset: {}
   timer: 0
