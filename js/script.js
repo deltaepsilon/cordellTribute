@@ -157,18 +157,18 @@
       timer = 0;
       draw = $('#draw');
       ctx = window.face.ctx;
-      draw.mousedown(function() {
+      draw.bind('vmousedown mousedown', function() {
         clearTimeout(timer);
         timer = setTimeout(window.face.playAudio, 2000);
         return window.face.drawing = true;
       });
-      draw.mouseup(function() {
+      draw.bind('vmouseup mouseup', function() {
         return window.face.drawing = false;
       });
-      draw.mouseleave(function() {
+      draw.bind('vmouseleave mouseleave', function() {
         return window.face.drawing = false;
       });
-      return draw.mousemove(function(e) {
+      return draw.bind('vmousemove mousemove', function(e) {
         var x, y;
         if (window.face.drawing === false) {
           return;

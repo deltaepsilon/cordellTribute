@@ -131,15 +131,19 @@ window.face =
     timer = 0
     draw = $('#draw')
     ctx = window.face.ctx
-    draw.mousedown ->
+    # draw.mousedown ->
+    draw.bind 'vmousedown mousedown', ->
       clearTimeout timer
       timer = setTimeout window.face.playAudio, 2000
       window.face.drawing = true
-    draw.mouseup ->
+    # draw.mouseup ->
+    draw.bind 'vmouseup mouseup', ->
       window.face.drawing = false
-    draw.mouseleave ->
+    # draw.mouseleave ->
+    draw.bind 'vmouseleave mouseleave', ->
       window.face.drawing = false
-    draw.mousemove (e) ->
+    # draw.mousemove (e) ->
+    draw.bind 'vmousemove mousemove', (e) ->
       if window.face.drawing == false
         return
       x = e.clientX  -  window.face.offset.left
