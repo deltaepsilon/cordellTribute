@@ -149,6 +149,9 @@
     },
     playAudio: function() {
       var element, elements, lip, lipBottom;
+      if (window.face.ios === true) {
+        return;
+      }
       lip = $('#lip');
       lipBottom = lip.css('bottom');
       elements = window.face.audioElements;
@@ -169,6 +172,9 @@
       timer = 0;
       draw = $('#draw');
       ctx = window.face.ctx;
+      draw.click(function() {
+        return window.top.scrollTo(0, 1);
+      });
       draw.bind('mousedown touchstart', function() {
         clearTimeout(timer);
         timer = setTimeout(window.face.playAudio, 2000);
@@ -214,7 +220,11 @@
     return Math.floor(Math.random() * (to - from + 1) + from);
   };
   $(document).ready(function() {
-    console.log("called document ready");
+    window.top.scrollTo(0, 1);
+    window.face['ios'] = false;
+    if (navigator.userAgent.toLowerCase().match(/(iphone|ipod|ipad)/)) {
+      window.face['ios'] = true;
+    }
     $.post('/', function(audio) {
       window.face['audio'] = $.parseJSON(audio);
       return window.face.placeAudio(window.face.audio);

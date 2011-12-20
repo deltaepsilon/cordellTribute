@@ -125,6 +125,8 @@ window.face =
       if typeof(callback) == 'function'
         callback()
   playAudio: ->
+    if window.face.ios == true
+      return
     lip = $('#lip')
     lipBottom = lip.css 'bottom'
     
@@ -144,7 +146,10 @@ window.face =
     draw = $('#draw')
     ctx = window.face.ctx
     # draw.mousedown ->
+    draw.click ->
+      window.top.scrollTo 0, 1
     draw.bind 'mousedown touchstart', ->
+      
       clearTimeout timer
       timer = setTimeout window.face.playAudio, 2000
       window.face.drawing = true
@@ -179,8 +184,10 @@ Object.randomize = (obj) ->
 Object.randomFromTo = (from, to) ->
   Math.floor Math.random() * (to - from + 1) + from
 $(document).ready ->
-  console.log "called document ready"
-  # $.get 'js/libs/jquery.mobile-1.0.min.js', ->
+  window.top.scrollTo 0, 1
+  window.face['ios'] = false
+  if navigator.userAgent.toLowerCase().match /(iphone|ipod|ipad)/
+    window.face['ios'] = true
   $.post '/', (audio) ->
     window.face['audio'] = $.parseJSON audio
     window.face.placeAudio window.face.audio
