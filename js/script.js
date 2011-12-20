@@ -148,10 +148,21 @@
       }
     },
     playAudio: function() {
-      var element, elements;
+      var element, elements, lip, lipBottom;
+      lip = $('#lip');
+      lipBottom = lip.css('bottom');
       elements = window.face.audioElements;
       element = elements[Object.randomFromTo(0, elements.length - 1)];
-      return element.play();
+      element.play();
+      console.log(element);
+      $(element).bind('ended', function() {
+        return lip.animate({
+          bottom: lipBottom
+        }, 100);
+      });
+      return lip.animate({
+        bottom: '-=25'
+      }, 100);
     },
     draw: function() {
       var ctx, draw, timer;

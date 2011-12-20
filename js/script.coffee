@@ -125,9 +125,20 @@ window.face =
       if typeof(callback) == 'function'
         callback()
   playAudio: ->
+    lip = $('#lip')
+    lipBottom = lip.css 'bottom'
+    
     elements = window.face.audioElements
     element = elements[Object.randomFromTo(0, elements.length - 1)]
     element.play()
+    console.log element
+    $(element).bind 'ended', ->
+      lip.animate
+        bottom: lipBottom
+        , 100
+    lip.animate
+      bottom: '-=25'
+      , 100
   draw: ->
     timer = 0
     draw = $('#draw')
