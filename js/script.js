@@ -84,7 +84,7 @@
             return window.face.incrementColors(1);
           };
           return window.face.timer = setInterval(wrapper, window.face.repeat);
-        }).bind('mouseup mouseleave', function() {
+        }).bind('mouseup mouseleave touchend', function() {
           return clearInterval(window.face.timer);
         });
         $('#lighter').bind('mousedown touchstart', function() {
@@ -93,7 +93,7 @@
             return window.face.incrementColors(-1);
           };
           return window.face.timer = setInterval(wrapper, window.face.repeat);
-        }).bind('mouseup mouseleave', function() {
+        }).bind('mouseup mouseleave touchend', function() {
           return clearInterval(window.face.timer);
         });
         $('#thicker').bind('mousedown touchstart', function() {
@@ -106,7 +106,7 @@
             return window.face.selectionDisplay();
           };
           return window.face.timer = setInterval(wrapper, window.face.repeat);
-        }).bind('mouseup mouseleave', function() {
+        }).bind('mouseup mouseleave touchend', function() {
           return clearInterval(window.face.timer);
         });
         $('#thinner').bind('mousedown touchstart', function() {
@@ -119,7 +119,7 @@
             return window.face.selectionDisplay();
           };
           return window.face.timer = setInterval(wrapper, window.face.repeat);
-        }).bind('mouseup mouseleave', function() {
+        }).bind('mouseup mouseleave touchend', function() {
           return clearInterval(window.face.timer);
         });
         return $('#erase').click(function() {
@@ -171,6 +171,7 @@
       });
       return draw.bind('mousemove touchmove', function(e) {
         var x, y;
+        e.preventDefault();
         if (window.face.drawing === false) {
           return;
         }

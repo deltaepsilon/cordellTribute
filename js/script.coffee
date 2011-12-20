@@ -74,7 +74,7 @@ window.face =
         wrapper = ->
           window.face.incrementColors 1
         window.face.timer = setInterval wrapper, window.face.repeat
-      .bind 'mouseup mouseleave', ->
+      .bind 'mouseup mouseleave touchend', ->
         clearInterval window.face.timer
       
       # Lighter
@@ -82,7 +82,7 @@ window.face =
         wrapper = ->
           window.face.incrementColors -1
         window.face.timer = setInterval wrapper, window.face.repeat
-      .bind 'mouseup mouseleave', ->
+      .bind 'mouseup mouseleave touchend', ->
         clearInterval window.face.timer
       
       # Thicker
@@ -93,7 +93,7 @@ window.face =
           window.face.diameter += 1
           window.face.selectionDisplay()
         window.face.timer = setInterval wrapper, window.face.repeat
-      .bind 'mouseup mouseleave', ->
+      .bind 'mouseup mouseleave touchend', ->
         clearInterval window.face.timer
       
       # Thinner
@@ -104,7 +104,7 @@ window.face =
           window.face.diameter -= 1
           window.face.selectionDisplay()
         window.face.timer = setInterval wrapper, window.face.repeat
-      .bind 'mouseup mouseleave', ->
+      .bind 'mouseup mouseleave touchend', ->
         clearInterval window.face.timer
       
       # Erase
@@ -145,6 +145,7 @@ window.face =
       window.face.drawing = false
     # draw.mousemove (e) ->
     draw.bind 'mousemove touchmove', (e) ->
+      e.preventDefault()
       if window.face.drawing == false
         return
       x = e.pageX  -  window.face.offset.left
