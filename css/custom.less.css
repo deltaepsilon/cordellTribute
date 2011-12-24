@@ -1,22 +1,36 @@
 body {
   background: #000000;
   min-width: 768px;
-  min-height: 1024px;
+  min-height: 1000px;
   font-family: 'Bowlby One SC', cursive;
+  margin: auto;
 }
 #face {
   width: 768px;
-  height: 1024px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-left: -384px;
-  margin-top: -512px;
+  height: 1000px;
+  position: relative;
+  margin: auto;
+  /*	position: absolute;
+	left: 50%;
+    top: 50%;
+    margin-left: -.5 * @faceWidth;
+    margin-top: -.5 * @faceHeight;*/
+
   border: 1px solid #ffffff;
-  background-color: #666666;
+  background-color: #212121;
   background-image: url(/img/face.png);
   background-repeat: no-repeat;
   background-position: center;
+}
+#lip {
+  background-image: url("/img/lip.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  bottom: 275px;
+  height: 48px;
+  left: 307px;
+  position: absolute;
+  width: 185px;
 }
 #modal, #draw, #elements {
   position: absolute;
@@ -28,13 +42,13 @@ body {
 #draw {
   z-index: 1000;
   width: 768px;
-  height: 924px;
+  height: 925px;
   cursor: crosshair;
   position: absolute;
 }
 #elements {
   z-index: 2000;
-  top: 924px;
+  top: 925px;
   background-color: #000000;
 }
 #modal {
@@ -42,21 +56,21 @@ body {
 }
 .color-picker, #selection-display, #erase {
   float: left;
-  width: 50px;
-  height: 50px;
+  width: 37.5px;
+  height: 37.5px;
   /*position: relative;
 	top: 50%;*/
 
-  margin-top: 25px;
-  margin-left: 12.5px;
+  margin-top: 18.75px;
+  margin-left: 9.375px;
   cursor: pointer;
   background-color: #ffffff;
   border: 1px solid #ffffff;
 }
 #alpha-selector, #size-selector {
-  height: 100px 0.5;
-  width: 25px;
-  margin-left: 12.5px;
+  height: 75px 0.5;
+  width: 18.75px;
+  margin-left: 9.375px;
   float: left;
   cursor: pointer;
 }
@@ -64,10 +78,10 @@ body {
 #lighter,
 #thicker,
 #thinner {
-  height: 25px;
-  width: 25px;
+  height: 18.75px;
+  width: 18.75px;
   position: relative;
-  top: 25px;
+  top: 18.75px;
   /*margin-left: .25 * @colorPickerHeight;*/
 
   float: left;
@@ -78,11 +92,11 @@ body {
   background: rgba(255, 255, 255, 0.5);
 }
 #thinner {
-  height: 12.5px;
-  width: 12.5px;
+  height: 9.375px;
+  width: 9.375px;
   position: relative;
-  top: 31.25px;
-  left: 6.25px;
+  top: 23.4375px;
+  left: 4.6875px;
 }
 #selection-display {
   background: #ffffff;
@@ -94,6 +108,7 @@ body {
   float: right;
   position: relative;
   right: 25px;
+  font-size: 8px;
 }
 #erase span {
   position: absolute;
