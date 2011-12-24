@@ -56,7 +56,6 @@ window.face =
     window.face.ctx.clearRect 0, 0, draw.width(), draw.height() 
   elements: (callback) ->
     try
-      console.log "Called elements"
       elements = $('#elements')
       $.each window.face.colors, (name, value) ->
         elements.prepend '<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>'
@@ -127,20 +126,25 @@ window.face =
   playAudio: ->
     if window.face.ios == true
       return
-    lip = $('#lip')
-    lipBottom = lip.css 'bottom'
+    # lip = $('#lip')
+    # lipBottom = lip.css 'bottom'
     
     elements = window.face.audioElements
     element = elements[Object.randomFromTo(0, elements.length - 1)]
     element.play()
-    console.log element
-    $(element).bind 'ended', ->
-      lip.animate
-        bottom: lipBottom
-        , 100
-    lip.animate
-      bottom: '-=25'
-      , 100
+    
+    $('#draw').click ->
+      wrapper = ->
+        element.pause()
+      setTimeout wrapper, 1500
+
+    # $(element).bind 'ended', ->
+      # lip.animate
+        # bottom: lipBottom
+        # , 100
+    # lip.animate
+      # bottom: '-=25'
+      # , 100
   draw: ->
     timer = 0
     draw = $('#draw')

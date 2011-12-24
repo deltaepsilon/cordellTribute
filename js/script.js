@@ -66,7 +66,6 @@
     elements: function(callback) {
       var elements, pickers;
       try {
-        console.log("Called elements");
         elements = $('#elements');
         $.each(window.face.colors, function(name, value) {
           return elements.prepend('<span id="' + name + '" class="color-picker" style="display: none; background: ' + value + ';"></span>');
@@ -148,24 +147,20 @@
       }
     },
     playAudio: function() {
-      var element, elements, lip, lipBottom;
+      var element, elements;
       if (window.face.ios === true) {
         return;
       }
-      lip = $('#lip');
-      lipBottom = lip.css('bottom');
       elements = window.face.audioElements;
       element = elements[Object.randomFromTo(0, elements.length - 1)];
       element.play();
-      console.log(element);
-      $(element).bind('ended', function() {
-        return lip.animate({
-          bottom: lipBottom
-        }, 100);
+      return $('#draw').click(function() {
+        var wrapper;
+        wrapper = function() {
+          return element.pause();
+        };
+        return setTimeout(wrapper, 1500);
       });
-      return lip.animate({
-        bottom: '-=25'
-      }, 100);
     },
     draw: function() {
       var ctx, draw, timer;
